@@ -1,4 +1,4 @@
-defmodule AuthService.Auth.Guardian do
+defmodule AuthServiceWeb.Auth.Guardian do
     use Guardian, otp_app: :auth_service
     alias AuthService.Accounts
 
@@ -24,7 +24,7 @@ defmodule AuthService.Auth.Guardian do
 
     def authenticate(email, password) do
         case Accounts.get_account_by_email(email) do
-            nil -> {:error, :unauthored}
+            nil -> {:error, :unauthorized}
             account -> 
                 case validate_password(password, account.hash_password) do
                     true -> create_token(account)
