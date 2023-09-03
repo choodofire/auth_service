@@ -12,6 +12,12 @@ defmodule AuthServiceWeb.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
+  end
+
+  pipeline :auth do
+    plug AuthServiceWeb.Auth.Pipeline
+    plug AuthServiceWeb.Auth.SetAccount
   end
 
   scope "/api", AuthServiceWeb do
@@ -20,4 +26,11 @@ defmodule AuthServiceWeb.Router do
     post "/accounts/create", AccountController, :create
     post "/accounts/sign_in", AccountController, :sign_in
   end
+
+  scope "/api", AuthServiceWeb do
+    pipe_through [:api, :auth]
+    get "/accounts/by_id/:id", AccountController, :show
+    post "/accounts/update", AccountController, :update
+  end
+
 end

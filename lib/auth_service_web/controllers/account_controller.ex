@@ -4,7 +4,19 @@ defmodule AuthServiceWeb.AccountController do
   alias AuthServiceWeb.{Auth.Guardian, Auth.ErrorResponse}
   alias AuthService.{Accounts, Accounts.Account, Users, Users.User}
 
+  plug :is_authorized_account when action in [:update, :delete]
+
   action_fallback AuthServiceWeb.FallbackController
+
+  defp is_authorized_account(conn, _opts) do
+    %{params: %{"account" => params}} = conn
+    account = Accounts.get_account!(params["id"])
+    if conn.assigns.account.id == account.id do
+      conn
+    else
+      raise ErrorResponse.Forbidden
+    end
+  end
 
   def index(conn, _params) do
     accounts = Accounts.list_accounts()
@@ -25,6 +37,7 @@ defmodule AuthServiceWeb.AccountController do
     case Guardian.authenticate(email, hash_password) do
       {:ok, account, token} ->
         conn
+        |> Plug.Conn.put_session(:account_id, account.id)
         |> put_status(:ok)
         |> render("account_token.json", %{account: account, token: token})
       {:error, :unauthorized} -> raise ErrorResponse.Unauthorized, message: "Email or Password incorrect"
@@ -36,8 +49,8 @@ defmodule AuthServiceWeb.AccountController do
     render(conn, :show, account: account)
   end
 
-  def update(conn, %{"id" => id, "account" => account_params}) do
-    account = Accounts.get_account!(id)
+  def update(conn, %{"account" => account_params}) do
+    account = Accounts.get_account!(account_params["id"])
 
     with {:ok, %Account{} = account} <- Accounts.update_account(account, account_params) do
       render(conn, :show, account: account)
