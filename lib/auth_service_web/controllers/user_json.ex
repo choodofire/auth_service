@@ -15,6 +15,15 @@ defmodule AuthServiceWeb.UserJSON do
     %{data: data(user)}
   end
 
+  def user(%User{} = user) do
+    %{
+      id: user.id,
+      full_name: user.full_name,
+      gender: user.gender,
+      biography: user.biography
+    }
+  end
+
   defp data(%User{} = user) do
     %{
       id: user.id,

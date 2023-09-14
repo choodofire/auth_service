@@ -1,5 +1,6 @@
 defmodule AuthServiceWeb.AccountJSON do
   alias AuthService.Accounts.Account
+  alias AuthServiceWeb.UserJSON
 
   @doc """
   Renders a list of accounts.
@@ -20,6 +21,22 @@ defmodule AuthServiceWeb.AccountJSON do
       id: account.id,
       email: account.email,
       hash_password: account.hash_password
+    }
+  end
+
+  def account(%{account: account}) do
+    %{
+      id: account.id,
+      email: account.email,
+      hash_password: account.hash_password
+    }
+  end
+
+  def full_account(%{account: account}) do
+    %{
+      id: account.id,
+      email: account.email,
+      user: UserJSON.user(account.user)
     }
   end
 
