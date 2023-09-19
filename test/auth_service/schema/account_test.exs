@@ -84,5 +84,32 @@ defmodule AuthService.Schema.AccountTest do
                 "The optional field #{field} is required when it should not be."
       end
     end
+
+    test "error: returns errors changeset when an email address is reused" do
+      Ecto.Adapters.SQL.Sandbox.checkout(AuthService.Repo)
+
+      {:ok, existing_account} =
+        %Account{}
+        |> Account.changeset(valid_params(@expected_fields_with_types))
+        |> AuthService.Repo.insert()
+
+      changeset_with_repeated_email =
+        %Account{}
+        |> Account.changeset(
+          valid_params(@expected_fields_with_types)
+          |> Map.put("email", existing_account.email)
+        )
+
+      assert {:error, %Ecto.Changeset{valid?: false, errors: errors}} =
+        AuthService.Repo.insert(changeset_with_repeated_email)
+
+      assert errors[:email],
+                "The field :email is missing from errors."
+
+      {_, meta} = errors[:email]
+
+      assert meta[:constraint] == :unique,
+                "The validation type, #{meta[:validation]}, is incorrect."
+    end
   end
 end
