@@ -43,7 +43,8 @@ defmodule AuthService.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:guardian, "~> 2.3"},
       {:guardian_db, "~> 2.0"},
-      {:bcrypt_elixir, "~> 3.0"}
+      {:bcrypt_elixir, "~> 3.0"},
+      {:faker, "~> 0.17", only: :test}
     ]
   end
 
