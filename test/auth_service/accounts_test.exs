@@ -91,6 +91,38 @@ defmodule AuthService.AccountsTest do
     end
   end
 
+  describe "get_full_account/1" do
+    test "success: it returns a full account when given a valid ID" do
+      existing_account = Factory.insert(:account)
+      returned_account = Accounts.get_full_account(existing_account.id)
+
+      # Let's ignore the user association when comparing
+      returned_account_without_user = Map.put(returned_account, :user, nil)
+      existing_account_without_user = Map.put(existing_account, :user, nil)
+
+      assert returned_account_without_user == existing_account_without_user
+    end
+
+    test "error: it returns nil when an account does not exist" do
+      non_existing_id = Ecto.UUID.generate()
+      assert nil == Accounts.get_full_account(non_existing_id)
+    end
+  end
+
+  describe "get_account_by_email/1" do
+    test "success: it returns an account when given a valid email" do
+      existing_account = Factory.insert(:account)
+      returned_account = Accounts.get_account_by_email(existing_account.email)
+
+      assert returned_account == existing_account
+    end
+
+    test "error: it returns nil when an account does not exist" do
+      non_existing_email = "non_existing_email@example.com"
+      assert nil == Accounts.get_account_by_email(non_existing_email)
+    end
+  end
+
   describe "delete_account/1" do
     test "success: it deleets the account" do
       account = Factory.insert(:account)

@@ -14,6 +14,7 @@ $ chmod +x docker_postgres_start.sh && ./docker_postgres_start.sh
 
 # API Routes
 Each path must have an "api" scope at the beginning.
+
 Fields with "?" at the beginning are optional.
 
 | Method | Path                  | Request JSON   | Headers   | Response 200      | Description                  |
@@ -23,8 +24,8 @@ Fields with "?" at the beginning are optional.
 | GET  | /accounts/current   | -              | Authorization: JWT | - | Get data about your current account. |
 | GET  | /accounts/sign_out | - | Authorization: JWT | {</br>"id": str, </br>"token": null, </br>"email": str</br>} | Delete the token. |
 | GET  | /accounts/refresh_session | -        | Authorization: JWT | {</br>"id": str, </br>"token": str, </br>"email": str </br>} | Return new token and delete old|
-| POST | /accounts/update     | { "current_hash": str, ` - current password`</br> "account": {</br> "id": str,</br> "hash_password": str} ` - new password`</br> } | Authorization: JWT | -                 | Update account information.            |
-| PUT  | /users/update     | {</br>"user": { </br>&nbsp;&nbsp;&nbsp;"id": str, ` - its userId` </br>&nbsp;&nbsp;&nbsp;"?biography": str, </br>&nbsp;&nbsp;&nbsp;"?full_name":str, </br>&nbsp;&nbsp;&nbsp;"?gender": str} </br>} | Authorization: JWT | -                 | Update user information.            |
+| POST | /accounts/update     | { "current_hash": str,</br> "account": {</br> "id": str,</br> "hash_password": str} ` - new password`</br> } | Authorization: JWT | -                 | Update account information.            |
+| PUT  | /users/update     | {</br>"user": { </br>&nbsp;&nbsp;&nbsp;"id": str, ` - userId` </br>&nbsp;&nbsp;&nbsp;"?biography": str, </br>&nbsp;&nbsp;&nbsp;"?full_name":str, </br>&nbsp;&nbsp;&nbsp;"?gender": str} </br>} | Authorization: JWT | -                 | Update user information.            |
 
 ## Additional commands for Elixir + Phoenix
 
