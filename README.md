@@ -48,12 +48,6 @@ The authorisation token is represented in the JWT Bearer format.
 # Used to load and install project dependencies specified in the "mix.exs".
 $ mix deps.get
 
-# Starts the Phoenix web server.
-$ mix phx.server
-
-# Runs tests.
-$ mix test
-
 # Used to create the database specified in the Ecto configuration file.
 $ mix ecto.create
 
@@ -62,6 +56,12 @@ $ mix ecto.migrate
 
 # Rolls back the last migration, returning the database to its previous state.
 $ mix ecto.rollback
+
+# Starts the Phoenix web server.
+$ mix phx.server
+
+# Runs tests.
+$ mix test
 
 # Preparing the database for tests.
 $ MIX_ENV=test mix ecto.drop
